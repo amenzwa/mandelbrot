@@ -48,7 +48,7 @@ static int iterate(Complex c) {
   /* Iterate z <- z^2 + c for the specified c. */
   Complex z = rOfD(0.0, 0.0);
   int i = 0;
-  for (; i < I && cMag(z) < R; i++) z = cAdd(cSqre(z), c);
+  for (; i < I && cMod(z) < R; i++) z = cAdd(cSqre(z), c);
   return i;
 }
 

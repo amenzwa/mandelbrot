@@ -30,7 +30,22 @@ Complex pOfD(double m, double g) {
 Complex pOfR(Complex r) {
   /* Make a polar complex number from a rectangular complex number. */
   assert(isR(r));
-  return (Complex){P, cMag(r), cArg(r)};
+  return (Complex){P, cMod(r), cArg(r)};
+}
+
+double cMod(Complex c) {
+  if (isR(c)) return sqrt(sqre(c.a) + sqre(c.b));
+  else return c.a;
+}
+
+double cArg(Complex c) {
+  if (isR(c)) return fabs(c.a) <= epsilon ? (c.b < 0.0 ? 3 * M_PI_2 : M_PI_2) : atan(c.b / c.a);
+  else return c.b;
+}
+
+Complex cConj(Complex c) {
+  if (isP(c)) return pOfD(c.a, -c.b);
+  else return rOfD(c.a, -c.b);
 }
 
 Complex cAdd(Complex c, Complex d) {
@@ -58,27 +73,12 @@ Complex cDiv(Complex c, Complex d) {
   else assert(false);
 }
 
-double cMag(Complex c) {
-  if (isR(c)) return sqrt(sqre(c.a) + sqre(c.b));
-  else return c.a;
-}
-
-double cArg(Complex c) {
-  if (isR(c)) return fabs(c.a) <= epsilon ? (c.b < 0.0 ? 3 * M_PI_2 : M_PI_2) : atan(c.b / c.a);
-  else return c.b;
-}
-
 Complex cSqre(Complex c) {
   if (isP(c)) return cMul(c, c);
   else {
     Complex p = pOfR(c);
     return rOfP(cMul(p, p));
   }
-}
-
-Complex cConj(Complex c) {
-  if (isP(c)) return pOfD(c.a, -c.b);
-  else return rOfD(c.a, -c.b);
 }
 
 bool isR(Complex r) {

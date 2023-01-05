@@ -19,14 +19,14 @@ extern Complex rOfD(double x, double y);
 extern Complex rOfP(Complex p);
 extern Complex pOfD(double m, double g);
 extern Complex pOfR(Complex r);
+extern double cMod(Complex c);
+extern double cArg(Complex c);
+extern Complex cConj(Complex c);
 extern Complex cAdd(Complex c, Complex d);
 extern Complex cSub(Complex c, Complex d);
 extern Complex cMul(Complex c, Complex d);
 extern Complex cDiv(Complex c, Complex d);
-extern double cMag(Complex c);
-extern double cArg(Complex c);
 extern Complex cSqre(Complex c);
-extern Complex cConj(Complex c);
 extern bool isR(Complex r);
 extern bool isP(Complex p);
 
