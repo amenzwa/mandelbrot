@@ -1,6 +1,8 @@
 # Prerequisites
+.DS_Store
 *.d
 .idea
+*.pgm
 
 # Object files
 *.o
