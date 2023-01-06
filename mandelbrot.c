@@ -66,7 +66,9 @@ static void* mandelbrot(void* data) {
 
 static void serial() {
   /* Compute the Mandelbrot set using a single thread. */
-  Mandelbrot* m = mNew(rOfD(-3.0, +2.0), rOfD(+1.0, -2.0), true);
+  Complex tl = rOfD(-3.0, +2.0);
+  Complex br = rOfD(+1.0, -2.0);
+  Mandelbrot* m = mNew(tl, br, true);
   mandelbrot(m);
   Mandelbrot* mm[] = {m};
   save(mm, 1, m->w, m->h, "./mandelbrot-s.pgm");
@@ -75,12 +77,12 @@ static void serial() {
 
 static void parallel() {
   /* Compute the Mandelbrot set using multiple threads. */
-  Thread tt[NUM_THREADS];
   Complex tl = rOfD(-3.0, +2.0);
   Complex br = rOfD(+1.0, -2.0);
   Complex d = cSub(tl, br); // c-plane dimensions
   double py = d.b / (double) NUM_THREADS; // c-plane patch height
   Mandelbrot* mm[NUM_THREADS];
+  Thread tt[NUM_THREADS];
   for (int t = 0; t < NUM_THREADS; t++) {
     Complex ptl = rOfD(tl.a, tl.b - (double) t * py);
     Complex pbr = rOfD(br.a, ptl.b - py);
