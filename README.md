@@ -90,8 +90,11 @@ Note that C passes `struct` by value. So, it would be uneconomical to employ the
 
 This project demonstrates the use of POSIX threads and the mutation-free functional style in C. It is purposefully simple, so that the main concepts are unobscured by the infrastructure- and error-handling bits of code.
 
+Multi-threaded programming seems very difficult to those who are used to writing single-threaded programmes. But to those who have studied the Unix kernel in detail, multi-threaded programmes look natural, even if not easy. So, if you are an experienced programmer who is used to writing line-of-business applications, but you wish to explore multi-threaded system software, your starting point should be a good textbook on the Unix kernel, like the one listed below.
+
 ## *resources*
 
 - [*pthread Tutorial*](http://lemuria.cis.vtc.edu/~pchapin/TutorialPthread/pthread-Tutorial.pdf), Chapin
 - [*Pthreads Library*](https://docs.oracle.com/cd/E37838_01/html/E61057/tlib-1.html), Oracle
 - [`pthread.h`](https://pubs.opengroup.org/onlinepubs/7908799/xsh/pthread.h.html) man page, OpenGroup.org
+- [*The Design of the UNIX Operating System*](https://www.amazon.com/Design-UNIX-Operating-System/dp/0132017997/ref=sr_1_1?crid=16UXOL7NX1WBW&keywords=bach+unix&qid=1673295739&sprefix=bach+unix%2Caps%2C69&sr=8-1), Bach
