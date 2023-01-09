@@ -4,18 +4,29 @@
 #include <printf.h>
 #include <stdlib.h>
 #include <math.h>
+#include <assert.h>
 #include "thread.h"
 #include "mandelbrot.h"
 
+#define TL_A -3.0
+#define TL_B +2.0
+#define BR_A +1.0
+#define BR_B -2.0
+
 Mandelbrot* mNew(Complex tl, Complex br, bool invert) {
   Mandelbrot* m = malloc(sizeof(Mandelbrot));
+  assert(m != NULL);
   m->tl = tl;
   m->br = br;
   Complex d = cSub(m->tl, m->br);
   m->w = (int) (fabs(d.a) / D);
   m->h = (int) (fabs(d.b) / D);
   m->i = malloc(m->h * sizeof(int*));
-  for (int y = 0; y < m->h; y++) m->i[y] = malloc(m->w * sizeof(int));
+  assert(m->i != NULL);
+  for (int y = 0; y < m->h; y++) {
+    m->i[y] = malloc(m->w * sizeof(int));
+    assert(m->i[y]);
+  }
   m->invert = invert;
   return m;
 }
@@ -29,6 +40,7 @@ void mDel(Mandelbrot* m) {
 
 static void save(Mandelbrot* mm[], int n, int w, int h, const char* fn) {
   FILE* fp = fopen(fn, "wb");
+  assert(fp != NULL);
   fprintf(fp, "P2\n%d %d\n%d\n", w, h, L);
   for (int i = 0; i < n; i++)
     for (int y = 0; y < mm[i]->h; y++) {
@@ -66,9 +78,9 @@ static void* mandelbrot(void* data) {
 
 static void serial() {
   /* Compute the Mandelbrot set using a single thread. */
-  Complex tl = rOfD(-3.0, +2.0);
-  Complex br = rOfD(+1.0, -2.0);
-  Mandelbrot* m = mNew(tl, br, true);
+  Complex tlM = rOfD(TL_A, TL_B);
+  Complex brM = rOfD(BR_A, BR_B);
+  Mandelbrot* m = mNew(tlM, brM, true);
   mandelbrot(m);
   Mandelbrot* mm[] = {m};
   save(mm, 1, m->w, m->h, "./mandelbrot-s.pgm");
@@ -77,16 +89,16 @@ static void serial() {
 
 static void parallel() {
   /* Compute the Mandelbrot set using multiple threads. */
-  Complex tl = rOfD(-3.0, +2.0);
-  Complex br = rOfD(+1.0, -2.0);
-  Complex d = cSub(tl, br); // c-plane dimensions
-  double py = d.b / (double) NUM_THREADS; // c-plane patch height
+  Complex tlM = rOfD(TL_A, TL_B);
+  Complex brM = rOfD(BR_A, BR_B);
+  Complex d = cSub(tlM, brM); // c-plane dimensions
+  double yP = d.b / (double) NUM_THREADS; // c-plane patch height
   Mandelbrot* mm[NUM_THREADS];
   Thread tt[NUM_THREADS];
   for (int t = 0; t < NUM_THREADS; t++) {
-    Complex ptl = rOfD(tl.a, tl.b - (double) t * py);
-    Complex pbr = rOfD(br.a, ptl.b - py);
-    mm[t] = mNew(ptl, pbr, false);
+    Complex tlP = rOfD(tlM.a, tlM.b - (double) t * yP);
+    Complex brP = rOfD(brM.a, tlP.b - yP);
+    mm[t] = mNew(tlP, brP, false);
     tt[t] = tRun(mandelbrot, mm[t]);
   }
   for (int t = 0; t < NUM_THREADS; t++) tStop(tt[t]);
