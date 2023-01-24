@@ -39,7 +39,7 @@ double cMod(Complex c) {
 }
 
 double cArg(Complex c) {
-  if (isR(c)) return fabs(c.a) <= epsilon ? (c.b < 0.0 ? 3 * M_PI_2 : M_PI_2) : atan(c.b / c.a);
+  if (isR(c)) return fabs(c.a) <= epsilon ? (c.b < 0.0 ? 3.0 * M_PI_2 : M_PI_2) : atan(c.b / c.a);
   else return c.b;
 }
 
